@@ -1,29 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { getCustomerList } from './api/customers'
+import { getPurchaseFrequency, getCustomerPurchaseList } from './api/purchase'
+import Chart from './components/Chart/index'
+import { RangeByPriceCount } from './types/purchase'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [customers, setCustomers] = useState()
+  const [purchaseFrequency, setPurchaseFrequency] = useState<RangeByPriceCount[]>()
+  const [customerPurchaseInfo, setCustomerPurchaseInfo] = useState()
+
+  const fetchCustomerInfo = async () => {
+    try {
+      const customerInfo = await getCustomerList()
+      setCustomers(customerInfo)
+    } catch (error) {
+      const errors = error as Error
+      console.log(errors?.message || '알 수 없는 문제가 발생했습니다. 다시 시도해 주세요.')
+    }
+  }
+
+  const fetchPurchaseFrequency = async () => {
+    try {
+      const purchaseFrequencyInfo = await getPurchaseFrequency()
+      setPurchaseFrequency(purchaseFrequencyInfo)
+    } catch (error) {
+      const errors = error as Error
+      console.log(errors?.message || '알 수 없는 문제가 발생했습니다. 다시 시도해 주세요.')
+    }
+  }
+
+  const fetchCustomerPurchaseInfo = async (id: number) => {
+    try {
+      const customerPurchaseInfo = await getCustomerPurchaseList(id)
+      setCustomerPurchaseInfo(customerPurchaseInfo)
+    } catch (error) {
+      const errors = error as Error
+      console.log(errors?.message || '알 수 없는 문제가 발생했습니다. 다시 시도해 주세요.')
+    }
+  }
+
+  useEffect(() => {
+    fetchCustomerInfo()
+    fetchPurchaseFrequency()
+  }, [])
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <div>날짜필터 영역</div>
+        {purchaseFrequency && <Chart data={purchaseFrequency} />}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <div>고객 테이블</div>
     </>
   )
 }
