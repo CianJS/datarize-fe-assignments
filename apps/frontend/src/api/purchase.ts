@@ -7,7 +7,7 @@ export const getPurchaseFrequency = async (options?: PurchaseFrequencyOption) =>
   return data
 }
 
-export const getCustomerPurchaseList = async (id: number) => {
+export const getCustomerPurchaseInfo = async (id: number) => {
   const res = await fetch(`http://localhost:4000/api/customer/${id}/purchases`)
   const data = await res.json()
   return data

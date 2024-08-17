@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis, LabelList } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis, LabelList } from 'recharts'
 import { RangeByPriceCount } from '../../types/purchase'
 
 interface ChartProps {
