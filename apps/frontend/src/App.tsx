@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import './App.css'
 import { getCustomerList, CustomerOption } from './api/customers'
 import { getPurchaseFrequency, getCustomerPurchaseInfo } from './api/purchase'
 import { CustomerTable, Chart } from './components'
 import { RangeByPriceCount } from './types/purchase'
-import { Customer } from './types/customer'
+import { Customer, CustomerPurchaseInfo } from './types/customer'
 import { CustomerDetailTable } from './components/index'
+import './App.css'
 
 function App() {
   const [customers, setCustomers] = useState<Customer[]>()
   const [purchaseFrequency, setPurchaseFrequency] = useState<RangeByPriceCount[]>()
-  const [customerPurchaseInfo, setCustomerPurchaseInfo] = useState()
+  const [customerPurchaseInfo, setCustomerPurchaseInfo] = useState<CustomerPurchaseInfo[]>()
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>()
 
   const fetchCustomerInfo = async (options?: CustomerOption) => {
     try {
@@ -34,6 +35,7 @@ function App() {
 
   const onShowCustomerDetail = async (item: Customer) => {
     const customerPurchaseInfo = await getCustomerPurchaseInfo(item.id)
+    setSelectedCustomer(item)
     setCustomerPurchaseInfo(customerPurchaseInfo)
   }
 
@@ -50,7 +52,11 @@ function App() {
       </div>
       <div>
         {customers && <CustomerTable data={customers} onSelect={onShowCustomerDetail} />}
-        {customerPurchaseInfo && <CustomerDetailTable data={customerPurchaseInfo} onSelect={() => {}} />}
+        {customerPurchaseInfo && [
+          <hr />,
+          selectedCustomer && <h2>{selectedCustomer.name} 고객님의 상세 구매 내역</h2>,
+          <CustomerDetailTable data={customerPurchaseInfo} onSelect={() => {}} />,
+        ]}
       </div>
     </>
   )

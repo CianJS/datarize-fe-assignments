@@ -3,12 +3,14 @@ import { Table, Header, HeaderRow, Body, Row, HeaderCell, Cell } from '@table-li
 
 import { useTheme } from '@table-library/react-table-library/theme'
 import { getTheme } from '@table-library/react-table-library/baseline'
+import { useState } from 'react'
 interface ChartProps {
   data: Customer[]
   onSelect: (item: Customer) => void
 }
 
 function CustomerDetailTable({ data, onSelect }: ChartProps) {
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number>()
   const theme = useTheme({
     ...getTheme(),
     Row: `
@@ -16,8 +18,17 @@ function CustomerDetailTable({ data, onSelect }: ChartProps) {
         cursor: pointer;
         color: #757575;
       }
+      &.selected {
+        background-color: #888888;
+        color: #ffffff;
+      }
     `,
   })
+
+  const onSelectedRow = (item: Customer) => {
+    onSelect(item)
+    setSelectedCustomerId(item.id)
+  }
 
   return (
     <Table data={{ nodes: data }} theme={theme}>
@@ -34,7 +45,12 @@ function CustomerDetailTable({ data, onSelect }: ChartProps) {
 
           <Body>
             {tableList.map((item) => (
-              <Row key={`${item.id}_${item.name}`} item={item} onClick={() => onSelect(item)}>
+              <Row
+                className={selectedCustomerId === item.id ? 'selected' : ''}
+                key={`${item.id}_${item.name}`}
+                item={item}
+                onClick={() => onSelectedRow(item)}
+              >
                 <Cell>{item.id}</Cell>
                 <Cell>{item.name}</Cell>
                 <Cell>{item.count}</Cell>
