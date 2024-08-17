@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { getCustomerList, CustomerOption } from './api/customers'
 import { getPurchaseFrequency, getCustomerPurchaseInfo } from './api/purchase'
-import { CustomerTable, Chart } from './components'
-import { RangeByPriceCount } from './types/purchase'
+import { CustomerTable, Chart, DateSelection } from './components'
+import { RangeByPriceCount, DateFromTo } from './types/purchase'
 import { Customer, CustomerPurchaseInfo } from './types/customer'
 import { CustomerDetailTable } from './components/index'
+import { dateToStringFormat } from './utils/format'
 import './App.css'
 
 function App() {
@@ -12,6 +13,10 @@ function App() {
   const [purchaseFrequency, setPurchaseFrequency] = useState<RangeByPriceCount[]>()
   const [customerPurchaseInfo, setCustomerPurchaseInfo] = useState<CustomerPurchaseInfo[]>()
   const [selectedCustomer, setSelectedCustomer] = useState<Customer>()
+  const [fromToDates, setFromToDates] = useState<DateFromTo>({
+    from: new Date('2024-07-01'),
+    to: new Date('2024-07-31'),
+  })
 
   const fetchCustomerInfo = async (options?: CustomerOption) => {
     try {
@@ -23,9 +28,14 @@ function App() {
     }
   }
 
-  const fetchPurchaseFrequency = async () => {
+  const fetchPurchaseFrequency = async (options?: DateFromTo) => {
     try {
-      const purchaseFrequencyInfo = await getPurchaseFrequency()
+      const purchaseFrequencyInfo = await getPurchaseFrequency(
+        options && {
+          from: dateToStringFormat(options.from),
+          to: dateToStringFormat(options.to),
+        },
+      )
       setPurchaseFrequency(purchaseFrequencyInfo)
     } catch (error) {
       const errors = error as Error
@@ -39,15 +49,23 @@ function App() {
     setCustomerPurchaseInfo(customerPurchaseInfo)
   }
 
+  const onChangeDate = (data: DateFromTo) => {
+    setFromToDates(data)
+    fetchPurchaseFrequency(data)
+  }
+
   useEffect(() => {
     fetchCustomerInfo()
-    fetchPurchaseFrequency()
+    fetchPurchaseFrequency(fromToDates)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <>
       <div>
-        <div>날짜필터 영역</div>
+        <div className="date-picker-wrapper">
+          <DateSelection data={fromToDates} onChange={onChangeDate} />
+        </div>
         {purchaseFrequency && <Chart data={purchaseFrequency} />}
       </div>
       <br />

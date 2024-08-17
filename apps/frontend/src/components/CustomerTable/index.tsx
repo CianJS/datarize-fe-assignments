@@ -6,12 +6,12 @@ import { getTheme } from '@table-library/react-table-library/baseline'
 import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort'
 import { ChangeEvent, useState } from 'react'
 
-interface ChartProps {
+interface CustomerDetailTableProps {
   data: Customer[]
   onSelect: (item: Customer) => void
 }
 
-function CustomerDetailTable({ data, onSelect }: ChartProps) {
+function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
   const theme = useTheme({
     ...getTheme(),
     Table: `

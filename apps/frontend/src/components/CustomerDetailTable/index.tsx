@@ -3,12 +3,12 @@ import { Table, Header, HeaderRow, Body, Row, HeaderCell, Cell } from '@table-li
 import { useTheme } from '@table-library/react-table-library/theme'
 import { getTheme } from '@table-library/react-table-library/baseline'
 
-interface ChartProps {
+interface CustomerDetailTableProps {
   data: CustomerPurchaseInfo[]
   onSelect: (item: CustomerPurchaseInfo) => void
 }
 
-function CustomerDetailTable({ data, onSelect }: ChartProps) {
+function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
   const theme = useTheme(getTheme())
 
   return (
