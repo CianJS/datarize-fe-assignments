@@ -50,6 +50,7 @@ function App() {
         <div>날짜필터 영역</div>
         {purchaseFrequency && <Chart data={purchaseFrequency} />}
       </div>
+      <br />
       <div>
         {customers && <CustomerTable data={customers} onSelect={onShowCustomerDetail} />}
         {customerPurchaseInfo && [
