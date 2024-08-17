@@ -72,9 +72,9 @@ function App() {
       <div>
         {customers && <CustomerTable data={customers} onSelect={onShowCustomerDetail} />}
         {customerPurchaseInfo && [
-          <hr />,
-          selectedCustomer && <h2>{selectedCustomer.name} 고객님의 상세 구매 내역</h2>,
-          <CustomerDetailTable data={customerPurchaseInfo} onSelect={() => {}} />,
+          <hr key="hr_1" />,
+          selectedCustomer && <h2 key="h2_2">{selectedCustomer.name} 고객님의 상세 구매 내역</h2>,
+          <CustomerDetailTable key="customer-detail-table" data={customerPurchaseInfo} onSelect={() => {}} />,
         ]}
       </div>
     </>

@@ -9,14 +9,22 @@ interface CustomerDetailTableProps {
 }
 
 function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
-  const theme = useTheme(getTheme())
+  const theme = useTheme({
+    ...getTheme(),
+    HeaderRow: `
+      &.center th {
+        color: #141414;
+        text-align: center;
+      }
+    `,
+  })
 
   return (
     <Table data={{ nodes: data }} theme={theme}>
       {(tableList: CustomerPurchaseInfo[]) => (
         <>
           <Header>
-            <HeaderRow>
+            <HeaderRow className="center">
               <HeaderCell>등록일</HeaderCell>
               <HeaderCell>남은 수량</HeaderCell>
               <HeaderCell>상품명</HeaderCell>

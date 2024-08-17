@@ -17,6 +17,12 @@ function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
     Table: `
       margin: 12px auto;
     `,
+    HeaderRow: `
+      &.center th {
+        color: #141414;
+        text-align: center;
+      }
+    `,
     Row: `
       &.clickable {
         cursor: pointer;
@@ -29,17 +35,16 @@ function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
     `,
   })
   const sort = useSort(
-    data,
+    { nodes: data },
     {
       onChange: () => {},
     },
     {
+      // required라서 미사용인 값들도 추가해놓음
       sortFns: {
-        TASK: (array: Customer[]) => array.sort(() => 1),
-        DEADLINE: (array: Customer[]) => array.sort(() => 1),
-        TYPE: (array: Customer[]) => array.sort(() => 1),
-        COMPLETE: (array: Customer[]) => array.sort(() => 1),
-        TASKS: (array: Customer[]) => array.sort((a, b) => a.count - b.count),
+        NAME: (array) => array.sort(),
+        TOTALAMOUNT: (array) => array.sort(),
+        COUNT: (array) => array.sort((a, b) => a.count - b.count),
       },
     },
   )
@@ -73,10 +78,10 @@ function CustomerDetailTable({ data, onSelect }: CustomerDetailTableProps) {
         {(tableList: Customer[]) => (
           <>
             <Header>
-              <HeaderRow>
+              <HeaderRow className="center">
                 <HeaderCell>고객ID</HeaderCell>
                 <HeaderCell>고객명</HeaderCell>
-                <HeaderCellSort sortKey="TASKS">총 구매 횟수</HeaderCellSort>
+                <HeaderCellSort sortKey="COUNT">총 구매 횟수</HeaderCellSort>
                 <HeaderCell>총 구매 금액</HeaderCell>
               </HeaderRow>
             </Header>
